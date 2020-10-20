@@ -1,41 +1,44 @@
 import React, { useState } from "react";
+import InputArea from "./InputArea";
+import TodoItem from "./ToDoItem";
 
 function App() {
-	const [item, setItem] = useState("");
-	const [itemsList, setItemsList] = useState([]);
+	const [items, setItems] = useState([]);
+
+	function addItem(inputText) {
+		// setItemsList(itemsList.concat(item));
+		/** OR */
+		setItems((prevItems) => {
+		return [...prevItems, inputText];
+		});
+	}
+
+	function handleClick(id) {
+		setItems((previousValues) => {
+			return previousValues.filter((item, index) => {
+				return index !== id;
+			});
+		});
+	}
 
 	return (
 		<div className="container">
-			<div className="heading">
-				<h1>To-Do List</h1>
-			</div>
-			<div className="form">
-				<input
-					type="text"
-					onChange={(event) => setItem(event.target.value)}
-					value={item}
+		<div className="heading">
+			<h1>To-Do List</h1>
+		</div>
+		<InputArea onButtonClick={addItem} />
+		<div>
+			<ul>
+			{items.map((item, index) => (
+				<TodoItem
+				key={index}
+				index={index}
+				name={item}
+				onChecked={handleClick}
 				/>
-				<button
-					onClick={() => {
-						// setItemsList(itemsList.concat(item));
-						/** OR */
-						setItemsList((previousValue) => {
-							return [...previousValue, item];
-						});
-						setItem("");
-					}}
-				>
-					<span>Add</span>
-				</button>
-			</div>
-			<div>
-				<ul>
-					<li>An Item </li>
-					{itemsList.map((item) => (
-						<li>{item}</li>
-					))}
-				</ul>
-			</div>
+			))}
+			</ul>
+		</div>
 		</div>
 	);
 }
